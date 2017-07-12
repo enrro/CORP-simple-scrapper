@@ -1,3 +1,5 @@
+Option Explicit
+
 Sub Macro2()
 '
 '
@@ -7,29 +9,43 @@ Sub Macro2()
     Dim allRowOfData As Object
     Dim Elements As IHTMLElementCollection
     Dim Element As IHTMLElement
+    Dim fileNum As Integer
+    Dim urlArray() As String
+    Dim i As Integer
+    Dim errorChain As String
     
-    Set appIE = New InternetExplorerMedium
-    With appIE
-        .Navigate "http://sacnte335/Reports/Pages/Report.aspx?ItemPath=%2fAP_Reporting%2fAP_Weekly_Tracker"
-        .Visible = True
-    End With
+    fileNum = WorksheetFunction.CountA(Worksheets(1).Columns(5)) - 1
+    urlArray = urlBuilder(fileNum)
     
-    Do While appIE.Busy
-        DoEvents
-    Loop
+    For i = 0 To fileNum - 1
     
-    Set Document = appIE.Document
-    
-    'Dim myValue As String: myValue = allRowOfData.Cells(7).innerHTML
-    Set Elements = Document.getElementsByTagName("ul")
+        Set appIE = New InternetExplorerMedium
+        With appIE
+            .Navigate urlArray(i)
+            .Visible = True
+        End With
+        
+        Do While appIE.Busy
+            DoEvents
+        Loop
+        
+        Set Document = appIE.Document
+        
+        'Dim myValue As String: myValue = allRowOfData.Cells(7).innerHTML
+        Set Elements = Document.getElementsByTagName("ul")
         For Each Element In Elements
-        Debug.Print Element.innerText
-    Next Element
-   
+            
+            errorChain = errorChain & Element.innerText
+            
+        Next Element
+        Debug.Print errorChain
+        Sheet1.Cells(i + 2, 6).Value = errorChain
+        
+        
+        appIE.Quit
+        Set appIE = Nothing
+    Next i
+    Debug.Print "fin"
     
-    
-    appIE.Quit
-    Set appIE = Nothing
-    'Debug.Print "my value is"
     
 End Sub
