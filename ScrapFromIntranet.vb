@@ -16,21 +16,22 @@ Sub Macro2()
     
     fileNum = WorksheetFunction.CountA(Worksheets(1).Columns(5)) - 1
     urlArray = urlBuilder(fileNum)
-    
+    Set appIE = New InternetExplorerMedium
     For i = 0 To fileNum - 1
     
-        Set appIE = New InternetExplorerMedium
+        
         With appIE
             .Navigate urlArray(i)
-            .Visible = True
+            .Visible = False
         End With
         
-        Do While appIE.Busy
+        Do While (appIE.Busy Or appIE.readyState <> 4)
             DoEvents
         Loop
         
         Set Document = appIE.Document
         
+        errorChain = ""
         'Dim myValue As String: myValue = allRowOfData.Cells(7).innerHTML
         Set Elements = Document.getElementsByTagName("ul")
         For Each Element In Elements
@@ -38,13 +39,12 @@ Sub Macro2()
             errorChain = errorChain & Element.innerText
             
         Next Element
-        Debug.Print errorChain
+        Debug.Print i
         Sheet1.Cells(i + 2, 6).Value = errorChain
         
-        
-        appIE.Quit
-        Set appIE = Nothing
     Next i
+    appIE.Quit
+    Set appIE = Nothing
     Debug.Print "fin"
     
     
