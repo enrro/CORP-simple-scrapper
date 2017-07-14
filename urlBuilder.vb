@@ -9,12 +9,12 @@ Function urlBuilder(fileNum As Integer) As String()
     Dim i As Integer, arreglo() As String, Path As String
     
     ReDim arreglo(fileNum - 1)
-    Path = "http://sacnte335/Reports/Pages/Folder.aspx?ItemPath=%2f"
+    Path = "http://sacnte335/Reports/Pages/Report.aspx?ItemPath=%2f"
     
-    For i = 1 To fileNum
-        arreglo(i - 1) = Cells(i + 1, 5).Value
-        arreglo(i - 1) = Replace(arreglo(i - 1), "/", "%2f")
-        arreglo(i - 1) = Path & Replace(arreglo(i - 1), " ", "+")
+    For i = 0 To fileNum - 1
+        arreglo(i) = Cells(i + 2, 5).Value
+        arreglo(i) = Replace(arreglo(i), "/", "%2f")
+        arreglo(i) = Path & Replace(arreglo(i), " ", "+")
         
     Next i
     

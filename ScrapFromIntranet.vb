@@ -6,7 +6,6 @@ Sub Macro2()
     
     Dim appIE As Object
     Dim Document As htmlDocument
-    Dim allRowOfData As Object
     Dim Elements As IHTMLElementCollection
     Dim Element As IHTMLElement
     Dim fileNum As Integer
@@ -32,7 +31,6 @@ Sub Macro2()
         Set Document = appIE.Document
         
         errorChain = ""
-        'Dim myValue As String: myValue = allRowOfData.Cells(7).innerHTML
         Set Elements = Document.getElementsByTagName("ul")
         For Each Element In Elements
             
